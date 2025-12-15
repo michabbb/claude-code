@@ -96,17 +96,16 @@ Clone this repository and copy the plugin folder to your Claude Code plugins dir
 
 Once installed, activate the Council of Experts by saying:
 
-- "frag die experten" (German)
-- "beziehe die experten mit ein" (German)
 - "ask the experts"
 - "consult the experts"
+- "get expert opinions"
 
 ### Example
 
 ```
-User: Frag die Experten - ich muss entscheiden ob ich für mein Laravel-Projekt
-eine Queue-basierte Architektur oder synchrone Verarbeitung nutzen soll.
-Das Projekt ist ein E-Commerce mit ca. 1000 Orders/Tag.
+User: Ask the experts - I need to decide whether to use a queue-based architecture
+or synchronous processing for my Laravel project. It's an e-commerce platform
+handling about 1000 orders per day.
 ```
 
 Claude will then:

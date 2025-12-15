@@ -1,6 +1,6 @@
 ---
 name: talk-to-experts
-description: Consults a council of AI experts using multiple models in parallel. Activate when user says "frag die experten", "beziehe die experten mit ein", "ask the experts", "consult the experts", or requests multi-model expert opinions on complex decisions, architecture, or strategic questions.
+description: Consults a council of AI experts using multiple models in parallel. Activate when user says "ask the experts", "consult the experts", "get expert opinions", or requests multi-model expert opinions on complex decisions, architecture, or strategic questions.
 ---
 
 # Talk to Experts
