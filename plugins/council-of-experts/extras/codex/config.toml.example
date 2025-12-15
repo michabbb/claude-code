@@ -1,0 +1,7 @@
+# Add this section to your ~/.codex/config.toml
+# IMPORTANT: The expert profile MUST use sandbox = "read-only" to prevent file modifications!
+
+# Expert Profile - read-only advisor for strategic questions
+[profiles.expert]
+sandbox = "read-only"
+model_reasoning_effort = "high"

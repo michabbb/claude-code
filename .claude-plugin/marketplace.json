@@ -1,0 +1,19 @@
+{
+  "name": "michabbb-claude-plugins",
+  "owner": {
+    "name": "michabbb",
+    "url": "https://github.com/michabbb"
+  },
+  "metadata": {
+    "description": "Claude Code plugins by michabbb"
+  },
+  "plugins": [
+    {
+      "name": "council-of-experts",
+      "source": "./plugins/council-of-experts",
+      "description": "Consult a council of AI experts (Grok, Kimi, Gemini, MiniMax, GPT) in parallel",
+      "version": "1.0.0",
+      "keywords": ["experts", "multi-model", "consensus"]
+    }
+  ]
+}

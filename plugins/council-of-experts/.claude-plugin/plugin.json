@@ -1,0 +1,12 @@
+{
+  "name": "council-of-experts",
+  "version": "1.0.0",
+  "description": "Consult a council of AI experts using multiple AI models in parallel",
+  "author": {
+    "name": "michabbb",
+    "url": "https://github.com/michabbb"
+  },
+  "repository": "https://github.com/michabbb/claude-code",
+  "license": "MIT",
+  "keywords": ["experts", "multi-model", "consensus", "grok", "gemini", "gpt", "kimi", "minimax"]
+}
