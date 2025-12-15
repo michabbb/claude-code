@@ -18,11 +18,29 @@ Each expert analyzes your question independently, and you receive a synthesized 
 
 ## Prerequisites
 
-This plugin requires two external CLI tools to communicate with the AI models:
+This plugin requires the following tools to be installed:
 
-### 1. opencode CLI
+### 1. jq (JSON processor)
+
+[jq](https://stedolan.github.io/jq/) is required to parse JSON output from opencode.
+
+**Installation:**
+```bash
+# Ubuntu/Debian
+sudo apt-get install jq
+
+# macOS
+brew install jq
+
+# Arch Linux
+sudo pacman -S jq
+```
+
+### 2. opencode CLI
 
 [opencode](https://github.com/opencode-ai/opencode) is used for Grok, Kimi, Gemini, and MiniMax.
+
+**IMPORTANT:** The `--format json` flag is required to get session IDs from opencode output.
 
 **Installation:**
 ```bash
@@ -40,7 +58,7 @@ pip install opencode
 cp extras/opencode/expert.md ~/.config/opencode/agent/expert.md
 ```
 
-### 2. codex CLI
+### 3. codex CLI
 
 [codex](https://github.com/openai/codex) is used for GPT-5.2.
 
@@ -91,6 +109,44 @@ Make sure you have API keys configured for:
 ### Manual Installation
 
 Clone this repository and copy the plugin folder to your Claude Code plugins directory.
+
+## Claude Code Permissions (Required!)
+
+**CRITICAL:** This plugin requires Bash permissions for `opencode` and `codex` commands. Without these permissions, the expert consultations will fail.
+
+### Add to Settings
+
+Add the following permissions to your Claude Code settings:
+
+| Scope | File Location |
+|-------|---------------|
+| **Global** | `~/.claude/settings.json` |
+| **Project** | `.claude/settings.json` (in project root) |
+
+### Required Permissions
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(opencode:*)",
+      "Bash(codex:*)"
+    ]
+  }
+}
+```
+
+### Important Syntax Notes
+
+| Syntax | Meaning |
+|--------|---------|
+| `Bash(opencode:*)` | ✅ Correct - allows `opencode` with any arguments |
+| `Bash(opencode *)` | ❌ Wrong - space instead of colon causes validation error |
+| `Bash(opencode)` | ❌ Insufficient - only allows `opencode` without arguments |
+
+### Restart Required
+
+After modifying `settings.json`, **restart Claude Code** to apply the new permissions.
 
 ## Usage
 
@@ -165,11 +221,17 @@ council-of-experts/
 
 ## Troubleshooting
 
+### "jq command not found"
+Make sure jq is installed. See Prerequisites section above.
+
 ### "opencode command not found"
 Make sure opencode is installed and in your PATH.
 
 ### "codex command not found"
 Make sure codex is installed and in your PATH.
+
+### "Session ID not found"
+Make sure you're using the `--format json` flag with opencode commands. Without this flag, session IDs are not included in the output.
 
 ### "API key not configured"
 Check that your API keys are properly set in the respective CLI tools.

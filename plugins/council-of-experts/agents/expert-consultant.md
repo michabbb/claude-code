@@ -1,11 +1,8 @@
 ---
 name: expert-consultant
-description: Consults external AI experts via opencode and codex CLI. Use this agent when you need to run opencode or codex commands to consult experts. Has Bash permissions for opencode and codex.
-tools: Bash(opencode *), Bash(codex *)
+description: Consults external AI experts via opencode and codex CLI. Use this agent when you need to run opencode or codex commands to consult experts.
+tools: Bash
 model: haiku
-permissionMode: bypassPermissions
-permission:
-  bash: allow
 ---
 
 You are an Expert Consultant agent. Your ONLY job is to run ONE Bash command to consult an external AI expert.

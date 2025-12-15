@@ -46,9 +46,13 @@ Launch ALL 5 Task calls in a SINGLE message. Each subagent runs ONE Bash command
 subagent_type: "expert-consultant"
 run_in_background: true
 prompt: |
-  Run this Bash command and return the response + session ID:
+  Run this Bash command and extract the response + session ID from the JSON output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m xai/grok-4-1-fast -f [FILES] 2>&1
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m xai/grok-4-1-fast -f [FILES] --format json 2>&1
+
+  Parse the JSON output to extract:
+  - sessionID: from any line's "sessionID" field
+  - response text: from the line where type="text", get part.text
 ```
 
 **Task 2 - Kimi:**
@@ -56,9 +60,13 @@ prompt: |
 subagent_type: "expert-consultant"
 run_in_background: true
 prompt: |
-  Run this Bash command and return the response + session ID:
+  Run this Bash command and extract the response + session ID from the JSON output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m opencode/kimi-k2-thinking -f [FILES] 2>&1
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m opencode/kimi-k2-thinking -f [FILES] --format json 2>&1
+
+  Parse the JSON output to extract:
+  - sessionID: from any line's "sessionID" field
+  - response text: from the line where type="text", get part.text
 ```
 
 **Task 3 - Gemini:**
@@ -66,9 +74,13 @@ prompt: |
 subagent_type: "expert-consultant"
 run_in_background: true
 prompt: |
-  Run this Bash command and return the response + session ID:
+  Run this Bash command and extract the response + session ID from the JSON output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m google/gemini-3-pro-preview -f [FILES] 2>&1
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m google/gemini-3-pro-preview -f [FILES] --format json 2>&1
+
+  Parse the JSON output to extract:
+  - sessionID: from any line's "sessionID" field
+  - response text: from the line where type="text", get part.text
 ```
 
 **Task 4 - MiniMax:**
@@ -76,9 +88,13 @@ prompt: |
 subagent_type: "expert-consultant"
 run_in_background: true
 prompt: |
-  Run this Bash command and return the response + session ID:
+  Run this Bash command and extract the response + session ID from the JSON output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/minimax/minimax-m2 -f [FILES] 2>&1
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/minimax/minimax-m2 -f [FILES] --format json 2>&1
+
+  Parse the JSON output to extract:
+  - sessionID: from any line's "sessionID" field
+  - response text: from the line where type="text", get part.text
 ```
 
 **Task 5 - GPT:**
@@ -153,6 +169,29 @@ codex exec resume SESSION_ID "Follow-up" 2>&1
 | opencode | `-f /absolute/path/file1 -f /absolute/path/file2` |
 | codex | List files in prompt text (codex reads them itself) |
 
+## opencode JSON Output Format
+
+When using `--format json`, opencode outputs one JSON object per line (NDJSON). Example:
+
+```json
+{"type":"step_start","timestamp":1765763743412,"sessionID":"ses_xxx",...}
+{"type":"text","timestamp":1765763744943,"sessionID":"ses_xxx","part":{"type":"text","text":"The actual response",...}}
+{"type":"step_finish","timestamp":1765763744961,"sessionID":"ses_xxx",...}
+```
+
+**Key fields to extract:**
+- `sessionID` - available in every line, use for follow-ups
+- `part.text` - the actual response text (in lines where `type="text"`)
+
+**Parsing with jq:**
+```bash
+# Extract session ID (from first line)
+opencode run ... --format json 2>&1 | head -1 | jq -r '.sessionID'
+
+# Extract response text
+opencode run ... --format json 2>&1 | jq -r 'select(.type=="text") | .part.text'
+```
+
 ## Rules
 
 - **Launch ALL 5 Tasks in ONE message** - critical for parallelism
@@ -160,6 +199,7 @@ codex exec resume SESSION_ID "Follow-up" 2>&1
 - **Use `subagent_type: "expert-consultant"`** - custom agent with Bash(opencode *), Bash(codex *) permissions
 - Each subagent runs ONE Bash command to consult ONE expert
 - **Always use absolute paths** for files
+- **Always use `--format json`** for opencode commands to get session IDs
 - **codex MUST use `--sandbox read-only`** - prevents any file modifications!
 - **opencode expert agent has write/edit/bash disabled** - already read-only
 - Bash commands run INSIDE subagents, not in main thread

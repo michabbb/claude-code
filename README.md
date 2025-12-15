@@ -38,6 +38,63 @@ In Claude Code, run:
 /plugin marketplace list
 ```
 
+## Required Permissions
+
+**IMPORTANT:** After installing any plugin, you must configure the required Bash permissions in Claude Code.
+
+### Where to Configure
+
+Add permissions to your Claude Code settings file:
+
+| Scope | Location |
+|-------|----------|
+| **Global** (all projects) | `~/.claude/settings.json` |
+| **Project-specific** | `.claude/settings.json` in your project root |
+
+### Permission Syntax
+
+Permissions use prefix matching with `:*` syntax:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(opencode:*)",
+      "Bash(codex:*)"
+    ]
+  }
+}
+```
+
+**Syntax Rules:**
+- Use `Bash(command:*)` for prefix matching (allows `command` with any arguments)
+- Use `Bash(command)` for exact match (only allows `command` without arguments)
+- Do NOT use `Bash(command *)` with a space - this is invalid syntax
+
+### Example Full Settings
+
+```json
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(opencode:*)",
+      "Bash(codex:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
+```
+
+### Per-Plugin Requirements
+
+| Plugin | Required Permissions |
+|--------|---------------------|
+| **council-of-experts** | `Bash(opencode:*)`, `Bash(codex:*)` |
+
+See individual plugin READMEs for detailed permission requirements.
+
 ## License
 
 MIT License - see individual plugin licenses for details.
