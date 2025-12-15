@@ -46,13 +46,9 @@ Launch ALL 5 Task calls in a SINGLE message. Each subagent runs ONE Bash command
 subagent_type: "expert-consultant"
 run_in_background: true
 prompt: |
-  Run this Bash command and extract the response + session ID from the JSON output:
+  Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m xai/grok-4-1-fast -f [FILES] --format json 2>&1
-
-  Parse the JSON output to extract:
-  - sessionID: from any line's "sessionID" field
-  - response text: from the line where type="text", get part.text
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m xai/grok-4-1-fast -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 2 - Kimi:**
@@ -60,13 +56,9 @@ prompt: |
 subagent_type: "expert-consultant"
 run_in_background: true
 prompt: |
-  Run this Bash command and extract the response + session ID from the JSON output:
+  Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m opencode/kimi-k2-thinking -f [FILES] --format json 2>&1
-
-  Parse the JSON output to extract:
-  - sessionID: from any line's "sessionID" field
-  - response text: from the line where type="text", get part.text
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m opencode/kimi-k2-thinking -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 3 - Gemini:**
@@ -74,13 +66,9 @@ prompt: |
 subagent_type: "expert-consultant"
 run_in_background: true
 prompt: |
-  Run this Bash command and extract the response + session ID from the JSON output:
+  Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m google/gemini-3-pro-preview -f [FILES] --format json 2>&1
-
-  Parse the JSON output to extract:
-  - sessionID: from any line's "sessionID" field
-  - response text: from the line where type="text", get part.text
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m google/gemini-3-pro-preview -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 4 - MiniMax:**
@@ -88,13 +76,9 @@ prompt: |
 subagent_type: "expert-consultant"
 run_in_background: true
 prompt: |
-  Run this Bash command and extract the response + session ID from the JSON output:
+  Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/minimax/minimax-m2 -f [FILES] --format json 2>&1
-
-  Parse the JSON output to extract:
-  - sessionID: from any line's "sessionID" field
-  - response text: from the line where type="text", get part.text
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/minimax/minimax-m2 -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 5 - GPT:**
@@ -179,18 +163,20 @@ When using `--format json`, opencode outputs one JSON object per line (NDJSON). 
 {"type":"step_finish","timestamp":1765763744961,"sessionID":"ses_xxx",...}
 ```
 
-**Key fields to extract:**
-- `sessionID` - available in every line, use for follow-ups
-- `part.text` - the actual response text (in lines where `type="text"`)
+**Parsing with jq (recommended):**
 
-**Parsing with jq:**
+Extract both response and session ID in one clean command:
 ```bash
-# Extract session ID (from first line)
-opencode run ... --format json 2>&1 | head -1 | jq -r '.sessionID'
-
-# Extract response text
-opencode run ... --format json 2>&1 | jq -r 'select(.type=="text") | .part.text'
+opencode run "@expert [QUESTION]" -m [MODEL] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
+
+**Output format:**
+```
+response: The expert's answer here
+sessionid: ses_xxxxxxxxxxxxx
+```
+
+This filters for the `type="text"` line and extracts both the response text and session ID in a clean, parseable format.
 
 ## Rules
 
