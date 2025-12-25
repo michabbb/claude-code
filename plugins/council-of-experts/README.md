@@ -11,7 +11,7 @@ When you need expert advice on architecture decisions, code reviews, or strategi
 | **Grok** | xAI | grok-4-1-fast |
 | **Kimi** | Moonshot | kimi-k2-thinking |
 | **Gemini** | Google | gemini-3-pro-preview |
-| **MiniMax** | OpenRouter | minimax-m2 |
+| **MiniMax** | OpenRouter | minimax-m2.1 |
 | **GPT** | OpenAI | gpt-5.2 |
 
 Each expert analyzes your question independently, and you receive a synthesized summary with consensus points, divergent views, and a final recommendation.

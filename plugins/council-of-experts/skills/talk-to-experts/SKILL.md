@@ -22,7 +22,7 @@ Launches 5 subagents IN PARALLEL - each consults one expert and returns the resp
 | Grok | opencode | xai/grok-4-1-fast |
 | Kimi | opencode | opencode/kimi-k2-thinking |
 | Gemini | opencode | google/gemini-3-pro-preview |
-| MiniMax | opencode | openrouter/minimax/minimax-m2 |
+| MiniMax | opencode | openrouter/minimax/minimax-m2.1 |
 | GPT | codex | gpt-5.2 (high reasoning) |
 
 ## Workflow
@@ -78,7 +78,7 @@ run_in_background: true
 prompt: |
   Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/minimax/minimax-m2 -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/minimax/minimax-m2.1 -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 5 - GPT:**
