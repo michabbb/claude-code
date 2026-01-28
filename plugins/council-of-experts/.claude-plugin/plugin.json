@@ -1,6 +1,6 @@
 {
   "name": "council-of-experts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Consult a council of AI experts using multiple AI models in parallel",
   "author": {
     "name": "michabbb",

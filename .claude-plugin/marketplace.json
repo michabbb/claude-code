@@ -12,7 +12,7 @@
       "name": "council-of-experts",
       "source": "./plugins/council-of-experts",
       "description": "Consult a council of AI experts (Grok, Kimi, Gemini, MiniMax, GPT) in parallel",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "keywords": ["experts", "multi-model", "consensus"]
     }
   ]

@@ -20,7 +20,7 @@ Launches 5 subagents IN PARALLEL - each consults one expert and returns the resp
 | Expert | CLI | Model |
 |--------|-----|-------|
 | Grok | opencode | xai/grok-4-1-fast |
-| Kimi | opencode | opencode/kimi-k2-thinking |
+| Kimi | opencode | openrouter/moonshotai/kimi-k2.5 |
 | Gemini | opencode | google/gemini-3-pro-preview |
 | MiniMax | opencode | openrouter/minimax/minimax-m2.1 |
 | GPT | codex | gpt-5.2 (high reasoning) |
@@ -58,7 +58,7 @@ run_in_background: true
 prompt: |
   Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m opencode/kimi-k2-thinking -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/moonshotai/kimi-k2.5 -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 3 - Gemini:**
