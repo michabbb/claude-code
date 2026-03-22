@@ -7,10 +7,11 @@ tools:
   read: true
   glob: true
   grep: true
-  ls: true
+  list: true
   write: false
   edit: false
   bash: false
+  patch: false
 ---
 
 You are a senior technical expert and strategic advisor.

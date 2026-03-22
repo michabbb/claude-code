@@ -8,11 +8,11 @@ When you need expert advice on architecture decisions, code reviews, or strategi
 
 | Expert | Provider | Model |
 |--------|----------|-------|
-| **Grok** | xAI | grok-4-1-fast |
+| **Grok** | xAI | grok-4.20-0309-reasoning |
 | **Kimi** | Moonshot | kimi-k2.5 |
 | **Gemini** | Google | gemini-3-pro-preview |
-| **MiniMax** | OpenRouter | minimax-m2.1 |
-| **GPT** | OpenAI | gpt-5.2 |
+| **MiniMax** | OpenRouter | minimax-m2.7 |
+| **GPT** | OpenAI | gpt-5.4 |
 
 Each expert analyzes your question independently, and you receive a synthesized summary with consensus points, divergent views, and a final recommendation.
 
@@ -55,7 +55,7 @@ pip install opencode
 - Copy the expert agent to your opencode config:
 
 ```bash
-cp extras/opencode/expert.md ~/.config/opencode/agent/expert.md
+cp extras/opencode/expert.md ~/.config/opencode/agents/expert.md
 ```
 
 ### 3. codex CLI
@@ -238,7 +238,7 @@ Check that your API keys are properly set in the respective CLI tools.
 
 ### Expert makes file changes
 This should not happen if configured correctly. Double-check:
-- opencode: `~/.config/opencode/agent/expert.md` has `write: false`, `edit: false`, `bash: false`
+- opencode: `~/.config/opencode/agents/expert.md` has `write: false`, `edit: false`, `bash: false`
 - codex: `~/.codex/config.toml` has `[profiles.expert]` with `sandbox = "read-only"`
 
 ## License

@@ -19,11 +19,11 @@ Launches 5 subagents IN PARALLEL - each consults one expert and returns the resp
 
 | Expert | CLI | Model |
 |--------|-----|-------|
-| Grok | opencode | xai/grok-4-1-fast |
+| Grok | opencode | xai/grok-4.20-0309-reasoning |
 | Kimi | opencode | openrouter/moonshotai/kimi-k2.5 |
 | Gemini | opencode | google/gemini-3-pro-preview |
-| MiniMax | opencode | openrouter/minimax/minimax-m2.1 |
-| GPT | codex | gpt-5.2 (high reasoning) |
+| MiniMax | opencode | openrouter/minimax/minimax-m2.7 |
+| GPT | codex | gpt-5.4 (high reasoning) |
 
 ## Workflow
 
@@ -48,7 +48,7 @@ run_in_background: true
 prompt: |
   Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m xai/grok-4-1-fast -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m xai/grok-4.20-0309-reasoning -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 2 - Kimi:**
@@ -78,7 +78,7 @@ run_in_background: true
 prompt: |
   Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/minimax/minimax-m2.1 -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/minimax/minimax-m2.7 -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 5 - GPT:**
@@ -91,7 +91,7 @@ prompt: |
   codex exec --profile expert --sandbox read-only "[QUESTION_WITH_CONTEXT]
 
   Files to analyze:
-  [FILE_PATHS]" -m gpt-5.2 -c model_reasoning_effort=\"high\" 2>&1
+  [FILE_PATHS]" -m gpt-5.4 -c model_reasoning_effort=\"high\" 2>&1
 ```
 
 **IMPORTANT: codex MUST use `--sandbox read-only` to prevent any file modifications!**
