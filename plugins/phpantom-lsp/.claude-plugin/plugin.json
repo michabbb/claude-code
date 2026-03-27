@@ -1,0 +1,12 @@
+{
+  "name": "phpantom-lsp",
+  "version": "1.0.0",
+  "description": "PHPAntom LSP — lightweight PHP language server for code intelligence",
+  "author": {
+    "name": "michabbb",
+    "url": "https://github.com/michabbb"
+  },
+  "repository": "https://github.com/michabbb/claude-code",
+  "license": "MIT",
+  "keywords": ["php", "lsp", "phpantom", "language-server"]
+}

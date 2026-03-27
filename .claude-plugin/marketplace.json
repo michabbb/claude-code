@@ -14,6 +14,13 @@
       "description": "Consult a council of AI experts (Grok, Kimi, Gemini, MiniMax, GPT) in parallel",
       "version": "1.0.4",
       "keywords": ["experts", "multi-model", "consensus"]
+    },
+    {
+      "name": "phpantom-lsp",
+      "source": "./plugins/phpantom-lsp",
+      "description": "PHPAntom LSP — lightweight PHP language server for code intelligence",
+      "version": "1.0.0",
+      "keywords": ["php", "lsp", "phpantom", "language-server"]
     }
   ]
 }

@@ -1,0 +1,9 @@
+{
+  "php": {
+    "command": "phpantom_lsp",
+    "args": [],
+    "extensionToLanguage": {
+      ".php": "php"
+    }
+  }
+}
