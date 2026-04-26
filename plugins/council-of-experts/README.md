@@ -1,10 +1,10 @@
 # Council of Experts
 
-A Claude Code plugin that consults a council of 5 AI experts in parallel to get diverse perspectives on complex technical and strategic questions.
+A Claude Code plugin that consults a council of 6 AI experts in parallel to get diverse perspectives on complex technical and strategic questions.
 
 ## What is the Council of Experts?
 
-When you need expert advice on architecture decisions, code reviews, or strategic questions, this plugin consults 5 different AI models simultaneously:
+When you need expert advice on architecture decisions, code reviews, or strategic questions, this plugin consults 6 different AI models simultaneously:
 
 | Expert | Provider | Model |
 |--------|----------|-------|
@@ -12,6 +12,7 @@ When you need expert advice on architecture decisions, code reviews, or strategi
 | **Kimi** | Moonshot | kimi-k2.5 |
 | **Gemini** | Google | gemini-3-pro-preview |
 | **MiniMax** | OpenRouter | minimax-m2.7 |
+| **DeepSeek** | opencode-go | deepseek-v4-pro |
 | **GPT** | OpenAI | gpt-5.4 |
 
 Each expert analyzes your question independently, and you receive a synthesized summary with consensus points, divergent views, and a final recommendation.
@@ -38,7 +39,7 @@ sudo pacman -S jq
 
 ### 2. opencode CLI
 
-[opencode](https://github.com/opencode-ai/opencode) is used for Grok, Kimi, Gemini, and MiniMax.
+[opencode](https://github.com/opencode-ai/opencode) is used for Grok, Kimi, Gemini, MiniMax, and DeepSeek.
 
 **IMPORTANT:** The `--format json` flag is required to get session IDs from opencode output.
 
@@ -92,6 +93,7 @@ Make sure you have API keys configured for:
 - Moonshot (for Kimi)
 - Google AI (for Gemini)
 - OpenRouter (for MiniMax)
+- opencode-go (for DeepSeek V4 Pro)
 - OpenAI (for GPT)
 
 ## Installation
@@ -166,7 +168,7 @@ handling about 1000 orders per day.
 
 Claude will then:
 1. Prepare the context
-2. Launch 5 parallel subagents (one for each expert)
+2. Launch 6 parallel subagents (one for each expert)
 3. Collect all responses
 4. Present a synthesized summary with:
    - Individual expert responses
@@ -179,7 +181,7 @@ Claude will then:
 
 Each expert consultation provides a session ID. You can continue the conversation with a specific expert:
 
-**opencode (Grok, Kimi, Gemini, MiniMax):**
+**opencode (Grok, Kimi, Gemini, MiniMax, DeepSeek):**
 ```bash
 opencode run "Follow-up question here" -s SESSION_ID -m MODEL
 ```

@@ -5,14 +5,14 @@ description: Consults a council of AI experts using multiple models in parallel.
 
 # Talk to Experts
 
-Launches 5 subagents IN PARALLEL - each consults one expert and returns the response. Your main context stays clean.
+Launches 6 subagents IN PARALLEL - each consults one expert and returns the response. Your main context stays clean.
 
 ## How It Works
 
 1. You prepare the question + context
-2. Launch 5 Task subagents in ONE message (all parallel, each with `run_in_background: true`)
+2. Launch 6 Task subagents in ONE message (all parallel, each with `run_in_background: true`)
 3. Each subagent runs its Bash command to consult one expert
-4. Collect results from all 5 subagents
+4. Collect results from all 6 subagents
 5. Synthesize the expert opinions
 
 ## Expert Council
@@ -23,6 +23,7 @@ Launches 5 subagents IN PARALLEL - each consults one expert and returns the resp
 | Kimi | opencode | openrouter/moonshotai/kimi-k2.5 |
 | Gemini | opencode | google/gemini-3-pro-preview |
 | MiniMax | opencode | openrouter/minimax/minimax-m2.7 |
+| DeepSeek | opencode | opencode-go/deepseek-v4-pro |
 | GPT | codex | gpt-5.4 (high reasoning) |
 
 ## Workflow
@@ -37,9 +38,9 @@ Gather:
 - Relevant file paths (absolute!)
 - Problem description
 
-### 2. Launch 5 Subagents in ONE Message
+### 2. Launch 6 Subagents in ONE Message
 
-Launch ALL 5 Task calls in a SINGLE message. Each subagent runs ONE Bash command.
+Launch ALL 6 Task calls in a SINGLE message. Each subagent runs ONE Bash command.
 
 **Task 1 - Grok:**
 ```
@@ -81,7 +82,17 @@ prompt: |
   opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/minimax/minimax-m2.7 -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
-**Task 5 - GPT:**
+**Task 5 - DeepSeek:**
+```
+subagent_type: "expert-consultant"
+run_in_background: true
+prompt: |
+  Run this Bash command and return the output:
+
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m opencode-go/deepseek-v4-pro -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
+```
+
+**Task 6 - GPT:**
 ```
 subagent_type: "expert-consultant"
 run_in_background: true
@@ -98,7 +109,7 @@ prompt: |
 
 ### 3. Collect Results
 
-Use TaskOutput to collect all 5 responses. Each subagent returns:
+Use TaskOutput to collect all 6 responses. Each subagent returns:
 - The expert's response
 - The session ID for follow-ups
 
@@ -114,6 +125,7 @@ Present to user:
 **Kimi:** [summary]
 **Gemini:** [summary]
 **MiniMax:** [summary]
+**DeepSeek:** [summary]
 **GPT:** [summary]
 
 ### Consensus
@@ -131,6 +143,7 @@ Present to user:
 - Kimi: [id]
 - Gemini: [id]
 - MiniMax: [id]
+- DeepSeek: [id]
 - GPT: [id]
 ```
 
@@ -180,7 +193,7 @@ This filters for the `type="text"` line and extracts both the response text and 
 
 ## Rules
 
-- **Launch ALL 5 Tasks in ONE message** - critical for parallelism
+- **Launch ALL 6 Tasks in ONE message** - critical for parallelism
 - **Use `run_in_background: true`** for each Task
 - **Use `subagent_type: "expert-consultant"`** - custom agent with Bash(opencode *), Bash(codex *) permissions
 - Each subagent runs ONE Bash command to consult ONE expert
