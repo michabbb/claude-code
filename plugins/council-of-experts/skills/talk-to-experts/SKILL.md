@@ -19,7 +19,7 @@ Launches 6 subagents IN PARALLEL - each consults one expert and returns the resp
 
 | Expert | CLI | Model |
 |--------|-----|-------|
-| Grok | opencode | xai/grok-4.20-0309-reasoning |
+| Grok | opencode | xai/grok-4.3-latest |
 | Kimi | opencode | openrouter/moonshotai/kimi-k2.5 |
 | Gemini | opencode | google/gemini-3-pro-preview |
 | MiniMax | opencode | openrouter/minimax/minimax-m2.7 |
@@ -49,7 +49,7 @@ run_in_background: true
 prompt: |
   Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m xai/grok-4.20-0309-reasoning -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m xai/grok-4.3-latest -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 2 - Kimi:**
