@@ -13,7 +13,7 @@ When you need expert advice on architecture decisions, code reviews, or strategi
 | **Gemini** | Google | gemini-3-pro-preview |
 | **MiniMax** | OpenRouter | minimax-m2.7 |
 | **DeepSeek** | opencode-go | deepseek-v4-pro |
-| **GPT** | OpenAI | gpt-5.4 |
+| **GPT** | OpenAI | gpt-5.5 (xhigh reasoning) |
 
 Each expert analyzes your question independently, and you receive a synthesized summary with consensus points, divergent views, and a final recommendation.
 
@@ -61,7 +61,7 @@ cp extras/opencode/expert.md ~/.config/opencode/agents/expert.md
 
 ### 3. codex CLI
 
-[codex](https://github.com/openai/codex) is used for GPT-5.2.
+[codex](https://github.com/openai/codex) is used for GPT-5.5.
 
 **Installation:**
 ```bash
@@ -81,7 +81,7 @@ cp extras/codex/expert.md ~/.codex/prompts/expert.md
 # Expert Profile - read-only advisor for strategic questions
 [profiles.expert]
 sandbox = "read-only"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 ```
 
 **IMPORTANT:** The `sandbox = "read-only"` setting is critical! It prevents codex from making any file modifications when consulting the expert.

@@ -4,4 +4,4 @@
 # Expert Profile - read-only advisor for strategic questions
 [profiles.expert]
 sandbox = "read-only"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"

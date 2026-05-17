@@ -24,7 +24,7 @@ Launches 6 subagents IN PARALLEL - each consults one expert and returns the resp
 | Gemini | opencode | google/gemini-3-pro-preview |
 | MiniMax | opencode | openrouter/minimax/minimax-m2.7 |
 | DeepSeek | opencode | opencode-go/deepseek-v4-pro |
-| GPT | codex | gpt-5.4 (high reasoning) |
+| GPT | codex | gpt-5.5 (xhigh reasoning) |
 
 ## Workflow
 
@@ -102,7 +102,7 @@ prompt: |
   codex exec --profile expert --sandbox read-only "[QUESTION_WITH_CONTEXT]
 
   Files to analyze:
-  [FILE_PATHS]" -m gpt-5.4 -c model_reasoning_effort=\"high\" 2>&1
+  [FILE_PATHS]" -m gpt-5.5 -c model_reasoning_effort=\"xhigh\" 2>&1
 ```
 
 **IMPORTANT: codex MUST use `--sandbox read-only` to prevent any file modifications!**
