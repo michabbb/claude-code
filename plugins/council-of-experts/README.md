@@ -8,7 +8,7 @@ When you need expert advice on architecture decisions, code reviews, or strategi
 
 | Expert | Provider | Model |
 |--------|----------|-------|
-| **Grok** | xAI | grok-4.3-latest |
+| **Grok** | xAI | grok-4.3 (high reasoning) |
 | **Kimi** | Moonshot | kimi-k2.5 |
 | **Gemini** | Google | gemini-3-pro-preview |
 | **MiniMax** | OpenRouter | minimax-m2.7 |
