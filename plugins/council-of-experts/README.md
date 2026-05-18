@@ -10,7 +10,7 @@ When you need expert advice on architecture decisions, code reviews, or strategi
 |--------|----------|-------|
 | **Grok** | xAI | grok-4.3 (high reasoning) |
 | **Kimi** | Moonshot | kimi-k2.6 |
-| **Gemini** | Google | gemini-3-pro-preview |
+| **Gemini** | Google | gemini-3-flash-preview |
 | **MiniMax** | OpenRouter | minimax-m2.7 |
 | **DeepSeek** | opencode-go | deepseek-v4-pro |
 | **GPT** | OpenAI | gpt-5.5 (xhigh reasoning) |

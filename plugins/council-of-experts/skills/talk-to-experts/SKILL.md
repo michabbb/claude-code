@@ -21,7 +21,7 @@ Launches 6 subagents IN PARALLEL - each consults one expert and returns the resp
 |--------|-----|-------|
 | Grok | opencode | xai/grok-4.3 (high reasoning) |
 | Kimi | opencode | openrouter/moonshotai/kimi-k2.6 |
-| Gemini | opencode | google/gemini-3-pro-preview |
+| Gemini | opencode | google/gemini-3-flash-preview |
 | MiniMax | opencode | openrouter/minimax/minimax-m2.7 |
 | DeepSeek | opencode | opencode-go/deepseek-v4-pro |
 | GPT | codex | gpt-5.5 (xhigh reasoning) |
@@ -69,7 +69,7 @@ run_in_background: true
 prompt: |
   Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m google/gemini-3-pro-preview -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
+  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m google/gemini-3-flash-preview -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
 **Task 4 - MiniMax:**
