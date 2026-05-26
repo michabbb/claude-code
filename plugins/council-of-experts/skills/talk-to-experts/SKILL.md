@@ -21,7 +21,7 @@ Launches 6 subagents IN PARALLEL - each consults one expert and returns the resp
 |--------|-----|-------|
 | Grok | opencode | xai/grok-4.3 (high reasoning) |
 | Kimi | opencode | openrouter/moonshotai/kimi-k2.6 |
-| Gemini | opencode | google/gemini-3-flash-preview |
+| Gemini | agy | (uses agy's configured model) |
 | MiniMax | opencode | openrouter/minimax/minimax-m2.7 |
 | DeepSeek | opencode | opencode-go/deepseek-v4-pro |
 | GPT | codex | gpt-5.5 (xhigh reasoning) |
@@ -62,14 +62,19 @@ prompt: |
   opencode run "@expert [QUESTION_WITH_CONTEXT]" -m openrouter/moonshotai/kimi-k2.6 -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
 ```
 
-**Task 3 - Gemini:**
+**Task 3 - Gemini (agy):**
 ```
 subagent_type: "expert-consultant"
 run_in_background: true
 prompt: |
   Run this Bash command and return the output:
 
-  opencode run "@expert [QUESTION_WITH_CONTEXT]" -m google/gemini-3-flash-preview -f [FILES] --format json 2>&1 | jq -r 'select(.type == "text") | "response: \(.part.text)\nsessionid: \(.sessionID)"'
+  AGY_LOG=$(mktemp /tmp/agy-council-XXXXXX.log) && agy -p "You are a senior technical expert. Be concise, direct, no filler. Structure: CONTEXT → OPTIONS → RECOMMENDATION (strategic) or SITUATION → ANALYSIS → RECOMMENDATION (code).
+
+  [QUESTION_WITH_CONTEXT]
+
+  Files to analyze:
+  [FILE_PATHS]" --log-file "$AGY_LOG" 2>&1 && echo "---AGY_CONVERSATION_ID---" && grep "Created conversation" "$AGY_LOG" | grep -oP '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 ```
 
 **Task 4 - MiniMax:**
@@ -154,6 +159,11 @@ Present to user:
 opencode run "Follow-up" -s SESSION_ID -m [MODEL] 2>&1
 ```
 
+**agy:**
+```bash
+agy -p "Follow-up" --conversation CONVERSATION_ID 2>&1
+```
+
 **codex:**
 ```bash
 codex exec resume SESSION_ID "Follow-up" 2>&1
@@ -164,6 +174,7 @@ codex exec resume SESSION_ID "Follow-up" 2>&1
 | CLI | Method |
 |-----|--------|
 | opencode | `-f /absolute/path/file1 -f /absolute/path/file2` |
+| agy | List file paths in prompt text (agy reads them via built-in tools) |
 | codex | List files in prompt text (codex reads them itself) |
 
 ## opencode JSON Output Format
@@ -191,16 +202,56 @@ sessionid: ses_xxxxxxxxxxxxx
 
 This filters for the `type="text"` line and extracts both the response text and session ID in a clean, parseable format.
 
+## agy Setup & Behavior
+
+**agy** (Antigravity CLI) replaces the former `gemini` CLI for the Gemini expert.
+
+### Key differences from opencode
+
+| Feature | opencode | agy |
+|---------|----------|-----|
+| Model selection | `-m model` per call | Not possible — uses whatever model is configured in agy's settings |
+| Agent/system prompt | `@expert` agent | Include expert instructions in prompt text |
+| File passing | `-f /path/to/file` | List file paths in prompt text (agy reads them) |
+| Session ID | `--format json` + jq | `--log-file` + grep for `Created conversation` UUID |
+| Follow-up | `-s SESSION_ID` | `--conversation CONVERSATION_ID` |
+| Read-only mode | Agent config (`write: false`) | No built-in read-only mode — safety via prompt instructions |
+
+### How to configure agy's model
+
+agy always uses the model last selected in an interactive session. To change it:
+1. Start agy interactively: `agy`
+2. Use `/settings` or the model picker to select the desired Gemini model
+3. Exit — the model persists for future `-p` calls
+
+### Extracting the conversation ID
+
+agy does not output conversation IDs in its response. Use `--log-file` to write logs, then grep:
+
+```bash
+AGY_LOG=$(mktemp /tmp/agy-council-XXXXXX.log)
+agy -p "question" --log-file "$AGY_LOG" 2>&1
+CONV_ID=$(grep "Created conversation" "$AGY_LOG" | grep -oP '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+```
+
+The subagent command combines this into one pipeline with a `---AGY_CONVERSATION_ID---` marker.
+
+### Follow-up note
+
+When resuming a conversation with `--conversation`, agy prints the **entire conversation history** followed by the new response (not just the new response). Keep this in mind when parsing output.
+
 ## Rules
 
 - **Launch ALL 6 Tasks in ONE message** - critical for parallelism
 - **Use `run_in_background: true`** for each Task
-- **Use `subagent_type: "expert-consultant"`** - custom agent with Bash(opencode *), Bash(codex *) permissions
+- **Use `subagent_type: "expert-consultant"`** - custom agent with Bash(opencode *), Bash(codex *), Bash(agy *) permissions
 - Each subagent runs ONE Bash command to consult ONE expert
 - **Always use absolute paths** for files
 - **Always use `--format json`** for opencode commands to get session IDs
+- **agy uses `--log-file` + grep** to extract conversation IDs (no JSON output mode)
 - **codex MUST use `--sandbox read-only`** - prevents any file modifications!
 - **opencode expert agent has write/edit/bash disabled** - already read-only
+- **agy has no read-only mode** - safety relies on expert prompt instructions and one-shot `-p` mode
 - Bash commands run INSIDE subagents, not in main thread
 - Main context only receives final synthesized results
 
@@ -208,5 +259,5 @@ This filters for the `type="text"` line and extracts both the response text and 
 
 This skill requires the `expert-consultant` agent at `agents/expert-consultant.md` with these permissions:
 ```
-tools: Bash(opencode *), Bash(codex *)
+tools: Bash(opencode *), Bash(codex *), Bash(agy *)
 ```
