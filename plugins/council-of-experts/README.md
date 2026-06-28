@@ -9,10 +9,10 @@ When you need expert advice on architecture decisions, code reviews, or strategi
 | Expert | Provider | Model |
 |--------|----------|-------|
 | **Grok** | xAI | grok-4.3 (high reasoning) |
-| **Kimi** | Moonshot | kimi-k2.6 |
-| **Gemini** | Google (via agy) | (uses agy's configured model) |
-| **MiniMax** | OpenRouter | minimax-m2.7 |
-| **DeepSeek** | opencode-go | deepseek-v4-pro |
+| **Kimi** | Moonshot | kimi-k2.7-code |
+| **Gemini** | Google (via opencode) | gemini-3.5-flash (high reasoning = max) |
+| **GLM** | OpenRouter | z-ai/glm-5.2 |
+| **Qwen** | OpenRouter | qwen3.7-max |
 | **GPT** | OpenAI | gpt-5.5 (xhigh reasoning) |
 
 Each expert analyzes your question independently, and you receive a synthesized summary with consensus points, divergent views, and a final recommendation.
@@ -39,7 +39,7 @@ sudo pacman -S jq
 
 ### 2. opencode CLI
 
-[opencode](https://github.com/opencode-ai/opencode) is used for Grok, Kimi, MiniMax, and DeepSeek.
+[opencode](https://github.com/opencode-ai/opencode) is used for Grok, Kimi, Gemini, GLM, and Qwen.
 
 **IMPORTANT:** The `--format json` flag is required to get session IDs from opencode output.
 
@@ -59,27 +59,7 @@ pip install opencode
 cp extras/opencode/expert.md ~/.config/opencode/agents/expert.md
 ```
 
-### 3. agy CLI (Antigravity)
-
-[agy](https://github.com/anthropics/antigravity) is used for Gemini. It replaces the former `gemini` CLI.
-
-**Installation:**
-```bash
-# Check if agy is installed
-agy --help
-```
-
-**Model configuration:**
-
-agy does not support per-call model selection. It always uses the model last configured in an interactive session:
-
-1. Start agy interactively: `agy`
-2. Use `/settings` or the model picker to select the desired Gemini model
-3. Exit — the model persists for future `-p` (print mode) calls
-
-**Note:** agy has no read-only/sandbox mode that prevents file writes. Safety is ensured by the expert prompt instructions and the one-shot `-p` mode.
-
-### 4. codex CLI
+### 3. codex CLI
 
 [codex](https://github.com/openai/codex) is used for GPT-5.5.
 
@@ -111,9 +91,8 @@ model_reasoning_effort = "xhigh"
 Make sure you have API keys configured for:
 - xAI (for Grok)
 - Moonshot (for Kimi)
-- Google (for Gemini — agy uses its own OAuth, run `agy` once to authenticate)
-- OpenRouter (for MiniMax)
-- opencode-go (for DeepSeek V4 Pro)
+- Google (for Gemini)
+- OpenRouter (for GLM and Qwen)
 - OpenAI (for GPT)
 
 ## Installation
@@ -152,7 +131,6 @@ Add the following permissions to your Claude Code settings:
   "permissions": {
     "allow": [
       "Bash(opencode:*)",
-      "Bash(agy:*)",
       "Bash(codex:*)"
     ]
   }
@@ -164,7 +142,6 @@ Add the following permissions to your Claude Code settings:
 | Syntax | Meaning |
 |--------|---------|
 | `Bash(opencode:*)` | ✅ Correct - allows `opencode` with any arguments |
-| `Bash(agy:*)` | ✅ Correct - allows `agy` with any arguments |
 | `Bash(opencode *)` | ❌ Wrong - space instead of colon causes validation error |
 | `Bash(opencode)` | ❌ Insufficient - only allows `opencode` without arguments |
 
@@ -203,14 +180,9 @@ Claude will then:
 
 Each expert consultation provides a session ID. You can continue the conversation with a specific expert:
 
-**opencode (Grok, Kimi, MiniMax, DeepSeek):**
+**opencode (Grok, Kimi, Gemini, GLM, Qwen):**
 ```bash
 opencode run "Follow-up question here" -s SESSION_ID -m MODEL
-```
-
-**agy (Gemini):**
-```bash
-agy -p "Follow-up question here" --conversation CONVERSATION_ID
 ```
 
 **codex (GPT):**
@@ -223,7 +195,6 @@ codex exec resume SESSION_ID "Follow-up question here"
 All experts are configured to be **read-only**:
 
 - **opencode expert agent**: Has `write: false`, `edit: false`, `bash: false`
-- **agy**: No built-in read-only mode — safety ensured by expert prompt instructions and one-shot `-p` mode
 - **codex expert profile**: Uses `sandbox = "read-only"`
 
 This ensures that the experts can analyze your code but cannot make any modifications.
@@ -257,9 +228,6 @@ Make sure jq is installed. See Prerequisites section above.
 ### "opencode command not found"
 Make sure opencode is installed and in your PATH.
 
-### "agy command not found"
-Make sure agy is installed and in your PATH (`~/.local/bin/agy`).
-
 ### "codex command not found"
 Make sure codex is installed and in your PATH.
 
@@ -272,11 +240,7 @@ Check that your API keys are properly set in the respective CLI tools.
 ### Expert makes file changes
 This should not happen if configured correctly. Double-check:
 - opencode: `~/.config/opencode/agents/expert.md` has `write: false`, `edit: false`, `bash: false`
-- agy: No read-only mode available — safety relies on expert prompt instructions and one-shot `-p` mode
 - codex: `~/.codex/config.toml` has `[profiles.expert]` with `sandbox = "read-only"`
-
-### agy uses wrong model
-agy always uses the model last configured in an interactive session. To change: run `agy` interactively, select the desired model via `/settings`, then exit.
 
 ## License
 

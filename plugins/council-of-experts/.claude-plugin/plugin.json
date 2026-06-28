@@ -1,6 +1,6 @@
 {
   "name": "council-of-experts",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Consult a council of AI experts using multiple AI models in parallel",
   "author": {
     "name": "michabbb",
@@ -8,5 +8,5 @@
   },
   "repository": "https://github.com/michabbb/claude-code",
   "license": "MIT",
-  "keywords": ["experts", "multi-model", "consensus", "grok", "gemini", "gpt", "kimi", "minimax", "deepseek"]
+  "keywords": ["experts", "multi-model", "consensus", "grok", "gemini", "gpt", "kimi", "glm", "qwen"]
 }
