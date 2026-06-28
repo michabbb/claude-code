@@ -76,13 +76,19 @@ mkdir -p ~/.codex/prompts
 cp extras/codex/expert.md ~/.codex/prompts/expert.md
 ```
 
-2. Add the expert profile to `~/.codex/config.toml`:
+2. Create the expert profile file `~/.codex/expert.config.toml`:
 ```toml
 # Expert Profile - read-only advisor for strategic questions
-[profiles.expert]
+# Codex >= 0.134.0: profiles live in their own ~/.codex/<name>.config.toml file
+# using top-level keys (NOT a [profiles.expert] table inside config.toml).
 sandbox = "read-only"
 model_reasoning_effort = "xhigh"
 ```
+
+> **Note (Codex >= 0.134.0):** The legacy `[profiles.expert]` table inside
+> `~/.codex/config.toml` is no longer accepted — `--profile expert` will error.
+> Put the keys at the top level of a dedicated `~/.codex/expert.config.toml`
+> instead (no `[profiles.expert]` wrapper).
 
 **IMPORTANT:** The `sandbox = "read-only"` setting is critical! It prevents codex from making any file modifications when consulting the expert.
 
@@ -215,7 +221,7 @@ council-of-experts/
 │   │   └── expert.md        # opencode @expert agent
 │   └── codex/
 │       ├── expert.md        # codex expert prompt
-│       └── config.toml.example  # codex profile example
+│       └── expert.config.toml.example  # codex expert profile (~/.codex/expert.config.toml)
 ├── LICENSE
 └── README.md
 ```
@@ -240,7 +246,7 @@ Check that your API keys are properly set in the respective CLI tools.
 ### Expert makes file changes
 This should not happen if configured correctly. Double-check:
 - opencode: `~/.config/opencode/agents/expert.md` has `write: false`, `edit: false`, `bash: false`
-- codex: `~/.codex/config.toml` has `[profiles.expert]` with `sandbox = "read-only"`
+- codex: `~/.codex/expert.config.toml` has `sandbox = "read-only"` (Codex >= 0.134.0; legacy `[profiles.expert]` in `config.toml` no longer works)
 
 ## License
 

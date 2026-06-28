@@ -99,7 +99,7 @@ run_in_background: true
 prompt: |
   Run this Bash command and return the response + session ID:
 
-  codex exec --profile expert --sandbox read-only "[QUESTION_WITH_CONTEXT]
+  codex exec --profile expert --sandbox read-only --skip-git-repo-check "[QUESTION_WITH_CONTEXT]
 
   Files to analyze:
   [FILE_PATHS]" -m gpt-5.5 -c model_reasoning_effort=\"xhigh\" 2>&1

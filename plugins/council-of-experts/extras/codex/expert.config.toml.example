@@ -1,0 +1,11 @@
+# Save this as ~/.codex/expert.config.toml
+#
+# Codex >= 0.134.0: profiles live in their own ~/.codex/<name>.config.toml file
+# and use TOP-LEVEL keys (do NOT wrap them in a [profiles.expert] table, and do
+# NOT put them inside ~/.codex/config.toml — that legacy format is rejected and
+# `--profile expert` will error out).
+#
+# IMPORTANT: The expert profile MUST use sandbox = "read-only" to prevent file modifications!
+
+sandbox = "read-only"
+model_reasoning_effort = "xhigh"
